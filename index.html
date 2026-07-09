@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jibaku — See what we're building.</title>
+<meta name="description" content="Jibaku is a self-discipline app that locks away the sites and apps stealing your focus — and won't let you take them back until you've earned it. Join the waitlist.">
+<link rel="icon" href="img/jibaku_logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800;900&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#040506;
+  --panel:#0a0c0d;
+  --panel-2:#0e1113;
+  --ink:#f3f5f4;
+  --mut:#9aa0a6;
+  --faint:#3a4046;
+  --line:#191d20;
+  --red:#FF4D6A;
+  --red-deep:#e11233;
+  --green:#00D97E;
+  --green-deep:#00a862;
+  --glow:rgba(0,217,126,.42);
+  --glow-r:rgba(255,77,106,.4);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+img{max-width:100%;height:auto;display:block;}
+html{scroll-behavior:smooth;overflow-x:hidden;}
+body{
+  background:var(--bg);color:var(--ink);
+  font-family:'Figtree',sans-serif;font-weight:400;line-height:1.6;letter-spacing:-.006em;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;width:100%;max-width:100%;
+}
+::selection{background:var(--red);color:#fff;}
+.serif{font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;letter-spacing:0;}
+.it{font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;letter-spacing:0;color:var(--ink);}
+
+/* red marker highlight (hugs text) */
+.hl{background:var(--red);color:#fff;font-weight:700;padding:0 .16em;line-height:1;border-radius:3px;
+  -webkit-box-decoration-break:clone;box-decoration-break:clone;}
+
+/* eyebrow / kicker — red */
+.kicker{font-size:12.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--red);font-weight:700;
+  display:inline-flex;align-items:center;gap:11px;}
+.kicker::before{content:"";width:24px;height:2px;border-radius:2px;background:var(--red);box-shadow:0 0 10px -1px var(--glow-r);}
+
+#why,#blocks,#how,#progress,#join{scroll-margin-top:90px;}
+
+.amb-wrap{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0;}
+.amb{position:absolute;border-radius:50%;filter:blur(170px);}
+.amb.a{width:540px;height:540px;background:var(--green);top:-300px;right:-220px;opacity:.06;}
+.amb.b{width:460px;height:460px;background:var(--red);bottom:-260px;left:-220px;opacity:.05;}
+main{position:relative;z-index:1;}
+
+/* scroll progress — green glow */
+.progress-track{position:fixed;top:0;left:0;right:0;height:2px;z-index:200;background:rgba(255,255,255,.04);}
+.progress-bar{height:100%;width:0;background:linear-gradient(90deg,var(--green-deep),var(--green));
+  box-shadow:0 0 12px 0 var(--glow),0 0 4px 0 rgba(0,217,126,.9);transition:width .1s linear;}
+
+/* nav */
+nav{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:150;width:calc(100% - 28px);max-width:1040px;}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;
+  background:rgba(10,12,13,.72);backdrop-filter:blur(14px);border:1px solid #1b2124;border-radius:14px;padding:8px 9px 8px 16px;}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.brand .logo{width:28px;height:28px;object-fit:contain;display:block;}
+.brand .name{font-weight:800;font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink);}
+.nav-links{display:flex;gap:26px;}
+.nav-links a{font-weight:500;font-size:13.5px;color:var(--mut);text-decoration:none;transition:color .2s;}
+.nav-links a:hover{color:var(--ink);}
+.nav-cta{font-weight:700;font-size:12.5px;color:#04130c;background:var(--green);padding:10px 18px;border-radius:9px;text-decoration:none;
+  box-shadow:0 0 0 1px rgba(0,217,126,.25),0 8px 24px -10px var(--glow);transition:transform .15s,box-shadow .15s;}
+.nav-cta:hover{transform:translateY(-1px);box-shadow:0 0 0 1px rgba(0,217,126,.5),0 12px 30px -8px var(--glow);}
+@media(max-width:760px){.nav-links{display:none;}}
+
+.wrap{max-width:940px;margin:0 auto;padding:0 28px;}
+
+/* signup form */
+.signup{max-width:520px;margin:34px auto 0;}
+.wait-form{display:flex;gap:12px;width:100%;}
+.wait-form input{flex:1;min-width:0;height:56px;background:var(--panel-2);border:1px solid #23282b;border-radius:14px;
+  padding:0 20px;color:#fff;font-family:inherit;font-size:16px;outline:none;transition:border-color .2s,box-shadow .2s;}
+.wait-form input::placeholder{color:#6b7278;}
+.wait-form input:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(0,217,126,.18),0 0 26px -6px var(--glow);}
+.wait-form button{flex:0 0 auto;height:56px;font-weight:800;font-size:15px;color:#04130c;background:var(--green);border:none;
+  padding:0 30px;border-radius:14px;cursor:pointer;white-space:nowrap;
+  box-shadow:0 0 0 1px rgba(0,217,126,.3),0 14px 32px -12px var(--glow);transition:transform .15s,box-shadow .15s,opacity .2s;}
+.wait-form button:hover{transform:translateY(-2px);box-shadow:0 0 0 1px rgba(0,217,126,.55),0 20px 40px -12px var(--glow);}
+.wait-form button:disabled{opacity:.55;cursor:default;transform:none;}
+.form-msg{min-height:22px;margin-top:16px;font-size:15px;font-weight:600;text-align:center;}
+.form-msg.ok{color:var(--green);}
+.form-msg.err{color:#ff6b81;}
+.form-fine{margin-top:12px;font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:#5f666b;text-align:center;}
+@media(max-width:520px){.wait-form{flex-direction:column;}.wait-form input{flex:0 0 auto;width:100%;}.wait-form button{width:100%;}}
+
+/* ============ HERO — cinematic ============ */
+.hero{position:relative;min-height:100vh;display:flex;align-items:center;padding:150px 28px 90px;overflow:hidden;}
+.hero-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:72% center;z-index:0;}
+.hero-overlay{position:absolute;inset:0;z-index:1;pointer-events:none;background:
+  linear-gradient(to bottom,rgba(4,5,6,0) 55%,var(--bg) 100%),
+  linear-gradient(90deg,rgba(4,5,6,.94) 0%,rgba(4,5,6,.72) 42%,rgba(4,5,6,.2) 78%,rgba(4,5,6,.05) 100%);}
+.hero-inner{position:relative;z-index:2;max-width:1040px;margin:0 auto;width:100%;}
+.hero-content{max-width:560px;text-align:left;}
+.hero-logo{width:100px;height:100px;object-fit:contain;margin:0 0 24px;filter:drop-shadow(0 0 40px rgba(0,217,126,.4));}
+.hero h1{font-weight:900;font-size:clamp(2.5rem,6vw,4.6rem);line-height:1.02;letter-spacing:-.04em;max-width:15ch;
+  text-shadow:0 2px 40px rgba(0,0,0,.7);}
+.hero-sub{margin:22px 0 0;max-width:44ch;color:#c8ccd0;font-size:clamp(16px,2.2vw,19px);line-height:1.6;}
+.hero-sub b{color:#fff;font-weight:600;}
+.hero-content .signup{margin:34px 0 0;max-width:500px;}
+.hero-content .form-msg,.hero-content .form-fine{text-align:left;}
+@media(max-width:760px){
+  .hero{min-height:90vh;padding:128px 22px 72px;}
+  .hero-bg{object-position:64% center;}
+  .hero-overlay{background:linear-gradient(to bottom,rgba(4,5,6,.55) 0%,rgba(4,5,6,.8) 100%);}
+  .hero-content{max-width:100%;text-align:center;margin:0 auto;}
+  .hero-logo{margin:0 auto 22px;}
+  .hero h1,.hero-sub{margin-left:auto;margin-right:auto;}
+  .hero-content .signup{margin:30px auto 0;}
+  .hero-content .form-msg,.hero-content .form-fine{text-align:center;}
+}
+
+/* ============ QUOTE ============ */
+.quote{padding:74px 0;}
+.quote .mq{font-family:'Instrument Serif',serif;font-style:italic;font-size:3.2rem;line-height:.5;color:var(--red);display:block;margin-bottom:14px;}
+.quote p{font-weight:800;font-size:clamp(1.8rem,4.6vw,3rem);line-height:1.14;letter-spacing:-.03em;max-width:22ch;}
+.quote .attr{margin-top:20px;font-size:14px;color:#777;}
+
+/* ============ MANIFESTO ============ */
+.manifesto{max-width:940px;margin:0 auto;padding:80px 28px;display:grid;grid-template-columns:1.3fr .9fr;gap:50px;align-items:start;}
+.man-body .kicker{margin-bottom:16px;}
+.man-body h2{font-weight:800;font-size:clamp(1.7rem,3.4vw,2.4rem);letter-spacing:-.03em;line-height:1.1;margin-bottom:20px;}
+.man-body p{color:#aeb3b8;font-size:17px;line-height:1.7;margin-bottom:15px;max-width:54ch;}
+.man-body p b{color:var(--ink);font-weight:600;}
+.man-sign{margin-top:18px;font-family:'Instrument Serif',serif;font-style:italic;font-size:1.5rem;color:var(--ink);}
+.fig{border-radius:14px;overflow:hidden;border:1px solid var(--line);box-shadow:0 40px 90px -40px #000;}
+.fig img{filter:grayscale(.08) contrast(1.03);display:block;width:100%;}
+.man-fig{align-self:start;}
+
+/* ============ WHAT IT BLOCKS (strike list) ============ */
+.kills{max-width:940px;margin:0 auto;padding:80px 28px;}
+.kills .kicker{margin-bottom:16px;}
+.kills h2{font-weight:800;font-size:clamp(1.7rem,3.6vw,2.4rem);letter-spacing:-.03em;line-height:1.08;}
+.kills .lede{margin:16px 0 40px;color:#aeb3b8;font-size:17px;max-width:54ch;line-height:1.6;}
+.klist{max-width:760px;border-top:1px solid var(--line);}
+.kitem{display:flex;align-items:center;gap:20px;padding:20px 0;border-bottom:1px solid var(--line);}
+.kitem .n{font-size:13px;font-weight:700;color:var(--red);min-width:26px;}
+.kitem .kw{font-weight:800;font-size:clamp(1.7rem,4.6vw,2.9rem);letter-spacing:-.03em;color:var(--ink);line-height:1.12;
+  text-decoration:line-through;text-decoration-color:transparent;text-decoration-thickness:5px;
+  transition:text-decoration-color .5s ease;}
+.klist.in .kitem .kw{text-decoration-color:var(--red);}
+.klist.in .kitem:nth-child(2) .kw{transition-delay:.1s;}
+.klist.in .kitem:nth-child(3) .kw{transition-delay:.2s;}
+.klist.in .kitem:nth-child(4) .kw{transition-delay:.3s;}
+.kitem .kt{margin-left:auto;font-size:15px;color:#7f858b;text-align:right;}
+
+/* ============ HOW IT HOLDS (image + bullets) ============ */
+.hold{max-width:940px;margin:0 auto;padding:80px 28px;display:grid;grid-template-columns:.9fr 1.3fr;gap:48px;align-items:center;}
+.hold .kicker{margin-bottom:16px;}
+.hold .fig{min-height:380px;}
+.hold .fig img{width:100%;height:100%;min-height:380px;object-fit:cover;}
+.hold h2{font-weight:800;font-size:clamp(1.7rem,3.4vw,2.4rem);letter-spacing:-.03em;line-height:1.12;margin-bottom:26px;}
+.hitem{display:flex;gap:14px;align-items:baseline;margin-bottom:20px;}
+.hitem:last-child{margin-bottom:0;}
+.hitem .bar{flex:0 0 auto;width:20px;height:3px;border-radius:2px;background:var(--red);transform:translateY(-5px);box-shadow:0 0 8px -1px var(--glow-r);}
+.hitem p{font-size:16.5px;line-height:1.5;color:#aeb3b8;}
+.hitem p b{color:var(--ink);font-weight:700;}
+
+/* ============ IN THE MAKING (video + app) ============ */
+.making{max-width:1040px;margin:0 auto;padding:80px 28px;}
+.making-head{max-width:640px;margin:0 0 44px;}
+.making-head .kicker{margin-bottom:16px;}
+.making-head h2{font-weight:800;font-size:clamp(1.8rem,3.6vw,2.6rem);letter-spacing:-.03em;line-height:1.1;margin-bottom:14px;}
+.making-head p{color:#aeb3b8;font-size:17px;line-height:1.6;max-width:52ch;}
+.making-head p b{color:var(--ink);font-weight:600;}
+.making-grid{display:grid;grid-template-columns:1.45fr .75fr;gap:30px;align-items:stretch;}
+.making-video{position:relative;border-radius:18px;overflow:hidden;border:1px solid #17251e;
+  box-shadow:0 40px 100px -50px var(--glow),0 30px 80px -50px #000;}
+.making-video video{width:100%;height:100%;display:block;aspect-ratio:16/11;object-fit:cover;background:#000;}
+.making-video .tag{position:absolute;top:14px;left:14px;display:inline-flex;align-items:center;gap:8px;
+  background:rgba(4,5,6,.62);backdrop-filter:blur(6px);border:1px solid #1e2b25;border-radius:999px;
+  padding:7px 13px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink);font-weight:600;}
+.making-video .tag .live{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);animation:pulse 2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.35;}}
+.making-phone{display:flex;justify-content:center;align-items:center;}
+.making-phone img{width:100%;max-width:232px;border-radius:26px;border:1px solid #1c1f22;box-shadow:0 50px 100px -50px #000,0 0 50px -30px var(--glow);}
+
+/* ============ WHO ============ */
+.who{text-align:center;padding:80px 28px;}
+.who .kicker{margin-bottom:22px;justify-content:center;}
+.who p{font-weight:800;font-size:clamp(1.7rem,4.2vw,2.8rem);letter-spacing:-.03em;line-height:1.2;max-width:20ch;margin:0 auto;}
+.who p .serif{color:var(--green);}
+
+/* ============ JOIN ============ */
+.join{padding:88px 28px 100px;text-align:center;}
+.join .divider{width:80px;height:1px;background:#20262a;margin:0 auto 50px;}
+.join .kicker{margin-bottom:22px;justify-content:center;}
+.join h2{font-weight:900;font-size:clamp(2rem,5vw,3.4rem);letter-spacing:-.035em;line-height:1.06;max-width:16ch;margin:0 auto 18px;}
+.join p{color:var(--mut);font-size:17px;max-width:46ch;margin:0 auto;line-height:1.6;}
+
+/* footer */
+footer{border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;
+  padding:36px 28px;max-width:1040px;margin:0 auto;}
+footer span{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#5b6167;}
+footer .fbrand{color:var(--ink);font-weight:700;}
+
+/* reveal */
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1);}
+.reveal.in{opacity:1;transform:none;}
+.stagger>*{opacity:0;transform:translateY(16px);transition:opacity .55s ease,transform .55s ease;}
+.stagger.in>*{opacity:1;transform:none;}
+.stagger.in>*:nth-child(1){transition-delay:.05s;}
+.stagger.in>*:nth-child(2){transition-delay:.14s;}
+.stagger.in>*:nth-child(3){transition-delay:.23s;}
+.stagger.in>*:nth-child(4){transition-delay:.32s;}
+.stagger.in>*:nth-child(5){transition-delay:.41s;}
+.stagger.in>*:nth-child(6){transition-delay:.5s;}
+
+@media(max-width:820px){
+  .manifesto{grid-template-columns:1fr;gap:34px;}
+  .man-fig{position:static;max-width:360px;}
+  .hold{grid-template-columns:1fr;gap:34px;}
+  .hold .fig{max-width:400px;}
+  .making-grid{grid-template-columns:1fr;gap:26px;}
+  .making-phone img{max-width:260px;}
+  .man-fig{margin:0 auto;}
+  .hold .fig{margin:0 auto;}
+}
+
+/* ---- phone: compact + premium ---- */
+@media(max-width:560px){
+  .wrap{padding:0 20px;}
+  .manifesto,.kills,.hold,.making{padding-left:20px;padding-right:20px;}
+  .hero{padding:116px 20px 62px;min-height:auto;}
+  .hero-logo{width:82px;height:82px;margin-bottom:20px;}
+  .hero h1{font-size:2.4rem;line-height:1.05;}
+  .hero-sub{font-size:16px;margin-top:18px;line-height:1.58;}
+  .hero-content .signup{margin-top:28px;}
+
+  .quote{padding:54px 0;}
+  .quote .mq{font-size:2.6rem;margin-bottom:8px;}
+  .quote p{font-size:1.7rem;line-height:1.16;}
+
+  .manifesto{padding-top:58px;padding-bottom:58px;gap:30px;}
+  .kills,.hold,.making{padding-top:58px;padding-bottom:58px;}
+  .hold{gap:28px;}
+  .making-head{margin-bottom:28px;}
+
+  .man-body h2,.kills h2,.hold h2,.making-head h2{font-size:1.6rem;line-height:1.14;}
+  .man-body p,.kills .lede,.making-head p{font-size:16px;line-height:1.62;}
+  .hitem p{font-size:15.5px;}
+  .hitem{margin-bottom:16px;}
+
+  .kills .lede{margin-bottom:30px;}
+  .kitem{gap:14px;padding:17px 0;}
+  .kitem .n{min-width:22px;font-size:12px;}
+  .kitem .kw{font-size:1.85rem;}
+  .kitem .kt{font-size:12.5px;max-width:34%;}
+
+  .who{padding:64px 20px;}
+  .who p{font-size:1.7rem;line-height:1.22;}
+
+  .join{padding:66px 20px 86px;}
+  .join .divider{margin-bottom:40px;}
+  .join h2{font-size:2rem;}
+  .join p{font-size:16px;}
+
+  footer{padding:26px 20px;gap:8px;}
+  footer span{font-size:11.5px;}
+
+  nav{top:10px;width:calc(100% - 20px);}
+  .nav-inner{padding:7px 8px 7px 14px;}
+  .brand .logo{width:24px;height:24px;}
+  .brand .name{font-size:12px;letter-spacing:.12em;}
+  .nav-cta{padding:9px 15px;font-size:12px;}
+  .making-video video{aspect-ratio:16/10;}
+  .making-phone img{max-width:230px;}
+}
+@media(prefers-reduced-motion:reduce){
+  *{scroll-behavior:auto;}
+  .reveal,.stagger>*{opacity:1;transform:none;transition:none;}
+  .making-video .tag .live{animation:none;}
+}
+</style>
+</head>
+<body>
+
+<div class="progress-track"><div class="progress-bar" id="progress"></div></div>
+<div class="amb-wrap"><div class="amb a"></div><div class="amb b"></div></div>
+
+<nav>
+  <div class="nav-inner">
+    <a href="#top" class="brand"><img class="logo" src="img/jibaku_logo.png" alt="Jibaku logo"><span class="name">Jibaku</span></a>
+    <div class="nav-links">
+      <a href="#why">The why</a>
+      <a href="#blocks">What it blocks</a>
+      <a href="#how">How it holds</a>
+    </div>
+    <a href="#join" class="nav-cta">Join Waitlist</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ============ HERO ============ -->
+<header class="hero" id="top">
+  <img class="hero-bg" src="img/batman.jpg" alt="" aria-hidden="true">
+  <div class="hero-overlay"></div>
+  <div class="hero-inner">
+    <div class="hero-content">
+      <img class="hero-logo" src="img/jibaku_logo.png" alt="Jibaku">
+      <h1>See what we're building</h1>
+      <p class="hero-sub">A self-discipline app that locks away the sites and apps stealing your focus — <b>and won't let you take them back until you've earned it.</b></p>
+      <div class="signup">
+        <form class="wait-form" data-form novalidate>
+          <input type="email" name="email" placeholder="your@email.com" autocomplete="email" required>
+          <button type="submit">Join Waitlist</button>
+        </form>
+        <p class="form-msg" data-msg></p>
+        <p class="form-fine">Building in public · Android beta · No spam</p>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ============ IN THE MAKING ============ -->
+<section class="making" id="progress">
+  <div class="making-head reveal">
+    <span class="kicker">In the making</span>
+    <h2>Built right now — <span class="it">non-stop.</span></h2>
+    <p>Not a concept, not a landing page with nothing behind it. Here's the actual work going in — and the app it's already become. <b>The waitlist gets it first.</b></p>
+  </div>
+  <div class="making-grid">
+    <figure class="making-video reveal">
+      <span class="tag"><span class="live"></span>Working on it</span>
+      <video autoplay muted loop playsinline preload="auto"
+             poster="img/WhatsApp Image 2026-07-08 at 15.16.27.jpeg">
+        <source src="img/0708.mp4" type="video/mp4">
+      </video>
+    </figure>
+    <figure class="making-phone reveal">
+      <img src="img/WhatsApp Image 2026-07-08 at 15.16.27.jpeg" alt="Jibaku app home screen: Porn-free Phone toggle, blocked sites, and a Lock In timer">
+    </figure>
+  </div>
+</section>
+
+<!-- ============ QUOTE 1 ============ -->
+<section class="quote reveal">
+  <div class="wrap">
+    <span class="mq">&ldquo;</span>
+    <p>You're not tired. <span class="hl">You're distracted.</span></p>
+    <p class="attr">— and somewhere, you already knew that.</p>
+  </div>
+</section>
+
+<!-- ============ MANIFESTO ============ -->
+<section class="manifesto" id="why">
+  <div class="man-body reveal">
+    <span class="kicker">The why</span>
+    <h2>I lost this fight for years. Willpower never <span class="it">held.</span></h2>
+    <p>I built this for people drowning in porn and the endless feed — <b>people like me.</b> The companies behind these apps are worth billions. You don't out-discipline a billion dollars.</p>
+    <p>I tried it all. Thousands of videos. Every blocker, every "system," every fresh Monday. Each time I caved — usually around 2am, alone, telling myself <em>just this once.</em></p>
+    <p>So I stopped trusting the version of me that breaks. I built a lock that <b>holds the line when I can't.</b> No off switch in the exact moment you want one.</p>
+    <p class="man-sign">80% built. We finish the rest together.</p>
+  </div>
+  <figure class="man-fig fig reveal">
+    <img src="img/1b33c6907da14de03ca45531edb960eb.jpg" alt="">
+  </figure>
+</section>
+
+<!-- ============ WHAT IT BLOCKS ============ -->
+<section class="kills" id="blocks">
+  <div class="reveal">
+    <span class="kicker">What it blocks</span>
+    <h2>You choose what to block. It stays blocked.</h2>
+    <p class="lede">Pick them once, while you're thinking clearly. They stay gone until your timer ends — no turning them back on at 2am, no "just this once."</p>
+  </div>
+  <div class="klist">
+    <div class="kitem"><span class="n">01</span><span class="kw">Porn</span><span class="kt">every site, every app</span></div>
+    <div class="kitem"><span class="n">02</span><span class="kw">Social media</span><span class="kt">the infinite scroll</span></div>
+    <div class="kitem"><span class="n">03</span><span class="kw">Any app you choose</span><span class="kt">games, dating, whatever</span></div>
+    <div class="kitem"><span class="n">04</span><span class="kw">Any site you choose</span><span class="kt">list updates itself</span></div>
+  </div>
+</section>
+
+<!-- ============ HOW IT HOLDS ============ -->
+<section class="hold" id="how">
+  <figure class="fig reveal">
+    <img src="img/39f82417141741d83d21f01fe12a1d06.jpg" alt="">
+  </figure>
+  <div>
+    <div class="reveal">
+      <span class="kicker">How it holds</span>
+      <h2>Once it's locked, it doesn't care <span class="it">how bad you want it.</span></h2>
+    </div>
+    <div class="stagger reveal">
+      <div class="hitem"><span class="bar"></span><p><b>You can't uninstall it</b> while a lock is running. Not you, not at your worst.</p></div>
+      <div class="hitem"><span class="bar"></span><p><b>No bypass.</b> No secret setting, no loophole, no workaround.</p></div>
+      <div class="hitem"><span class="bar"></span><p><b>It won't argue at 1am.</b> There's nothing to argue with. It just holds.</p></div>
+      <div class="hitem"><span class="bar"></span><p><b>Works across the whole phone</b> — every browser, every app, not just one.</p></div>
+      <div class="hitem"><span class="bar"></span><p><b>New sites don't slip through.</b> The blocklist updates on its own.</p></div>
+      <div class="hitem"><span class="bar"></span><p><b>Real time limits.</b> The kind that don't fold when you beg.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ QUOTE 2 ============ -->
+<section class="quote reveal">
+  <div class="wrap">
+    <span class="mq">&ldquo;</span>
+    <p>Win the fight <span class="hl">once.</span> Then make it permanent.</p>
+    <p class="attr">— that's the whole idea.</p>
+  </div>
+</section>
+
+<!-- ============ WHO ============ -->
+<section class="who">
+  <span class="kicker">Who it's for</span>
+  <p class="reveal">For people already doing the work — who just need the door to <span class="serif">stay shut.</span></p>
+</section>
+
+<!-- ============ JOIN ============ -->
+<section class="join" id="join">
+  <div class="divider"></div>
+  <span class="kicker">Invite-only beta</span>
+  <h2>Ready to bind yourself to it?</h2>
+  <p>Now that you've seen it — put your name down. The first people in help shape the beta.</p>
+  <div class="signup">
+    <form class="wait-form" data-form novalidate>
+      <input type="email" name="email" placeholder="your@email.com" autocomplete="email" required>
+      <button type="submit">Join Waitlist</button>
+    </form>
+    <p class="form-msg" data-msg></p>
+    <p class="form-fine">No spam · Leave anytime</p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <span class="fbrand">● Jibaku</span>
+  <span>Self-binding, on purpose.</span>
+  <span>© 2026</span>
+</footer>
+
+<script>
+  var bar=document.getElementById('progress');
+  function upd(){var h=document.documentElement;var sc=h.scrollHeight-h.clientHeight;
+    bar.style.width=(sc>0?(h.scrollTop/sc*100):0)+'%';}
+  addEventListener('scroll',upd,{passive:true});addEventListener('resize',upd);upd();
+
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){
+    if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.14});
+  document.querySelectorAll('.reveal,.klist').forEach(function(el){io.observe(el);});
+
+  // nudge the workflow video to play (muted autoplay can be blocked until interaction)
+  (function(){var v=document.querySelector('.making-video video');if(!v)return;
+    function p(){var x=v.play();if(x&&x.catch)x.catch(function(){});}
+    v.addEventListener('loadeddata',p,{once:true});p();
+    ['touchstart','pointerdown','scroll','keydown'].forEach(function(ev){
+      addEventListener(ev,function h(){p();removeEventListener(ev,h);},{once:true,passive:true});});
+  })();
+
+  // waitlist -> Edge Function
+  var WAITLIST_URL="https://xnngnxulujacvigvhjld.supabase.co/functions/v1/waitlist";
+  function setMsg(el,t,k){if(!el)return;el.textContent=t;el.className="form-msg "+(k||"");}
+  document.querySelectorAll('form[data-form]').forEach(function(form){
+    var msg=form.parentElement.querySelector('[data-msg]');
+    var input=form.querySelector('input[type=email]');
+    var btn=form.querySelector('button');
+    form.addEventListener('submit',async function(e){
+      e.preventDefault();
+      var email=(input.value||"").trim();
+      if(!email||email.indexOf("@")===-1){setMsg(msg,"Enter a valid email address.","err");input.focus();return;}
+      var label=btn.textContent;btn.disabled=true;btn.textContent="Joining…";setMsg(msg,"","");
+      try{
+        var r=await fetch(WAITLIST_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:email})});
+        var data={};try{data=await r.json();}catch(_){}
+        if(r.ok){setMsg(msg,"You're on the list. Check your email to confirm.","ok");form.reset();}
+        else{setMsg(msg,data.error||"Something went wrong. Please try again.","err");}
+      }catch(err){setMsg(msg,"Something went wrong. Please try again.","err");}
+      btn.disabled=false;btn.textContent=label;
+    });
+  });
+</script>
+
+</body>
+</html>
